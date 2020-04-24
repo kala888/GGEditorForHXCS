@@ -1,0 +1,19 @@
+.itemPanel {
+  flex: 1;
+  background: #fafafa;
+}
+
+.itemPanel .ant-card {
+  background: #fafafa;
+}
+
+.itemPanel .itemantCardBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 16px;
+}
+
+.itemPanel .itemantCardBody > div {
+   margin-bottom: 16px;
+}

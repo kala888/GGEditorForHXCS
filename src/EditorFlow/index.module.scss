@@ -1,0 +1,72 @@
+.editor {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 250px);
+  background: #fff;
+  overflow: hidden;
+}
+
+.editorHd {
+  display: flex;
+  padding: 8px;
+  border-bottom: 1px solid #e6e9ed;
+  text-align: center;
+  overflow: hidden;
+}
+
+.editorBd {
+  flex: 1;
+  flex-direction: row;
+  height: calc(100% - 45px);
+}
+
+.editorSidebar,
+.editorContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.editorSidebar {
+  background: #fafafa;
+}
+
+.editorSidebar:first-child {
+  border-right: 1px solid #e6e9ed;
+}
+
+.editorSidebar:last-child {
+  border-left: 1px solid #e6e9ed;
+}
+
+.flow,
+.mind,
+.koni {
+  flex: 1;
+}
+
+.editEditorName {
+  display: inline-flex;
+  min-width: 278px;
+  position: relative;
+  margin: 10px auto 0;
+  padding: 6px;
+  align-items: flex-end;
+}
+
+.editorName {
+  flex: 1;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.editBbottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid rgba(192, 196, 204, 0.50);
+}

@@ -1,0 +1,72 @@
+.detailPanel {
+  flex: 1;
+  background: #fafafa;
+  overflow: scroll;
+}
+
+.ant-card {
+  background: #fafafa;
+}
+
+//DetailForm
+.df_nodeCon {
+ padding: 0 16px 8px;
+}
+
+.df_nodeSettings {
+ padding-bottom: 16px;
+}
+
+.df_nodeInfo {
+  font-size: 20px;
+  color: #303133;
+  text-align: center;
+  padding: 24px 0;
+  font-family: PingFangSC-Regular;
+}
+
+.df_nodeFullCon {
+ padding-right: 16px;
+}
+
+.df_nodeContent {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.df_nodeContent i {
+  width: 100px;
+  text-align: right;
+  font-size: 12px;
+  color: #000000;
+}
+
+.df_nodeContent {
+  padding-bottom: 8px;
+}
+
+.df_nodeName {
+  flex: 1;
+}
+
+.df_nodeHei6 {
+  background: #EBECF0;
+  height: 6px;
+}
+
+.detailform_con {
+  padding: 0 16px;
+}
+
+.detailform_cons {
+  padding: 16px 16px 0;
+}
+
+.detailform_titleCon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}

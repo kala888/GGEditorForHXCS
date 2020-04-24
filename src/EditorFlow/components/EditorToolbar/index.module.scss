@@ -1,0 +1,20 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.anticon {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  margin: 0 6px;
+  padding-top: 6px;
+  text-align: center;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.anticon > .disable {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: auto;
+}

@@ -1,0 +1,31 @@
+.nlc_content, .ntlc_con, .isec_con {
+  padding: 0 16px;
+}
+
+.nlc_titleCon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.editBlockquote {
+  position: relative;
+  font-size: 16px;
+  color: #000000;
+  padding-left: 16px;
+}
+
+.editBlockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -.5em;
+  height: 20px;
+  width: 4px;
+  border-radius: 8px;
+  background-color: #5584FF;
+}
+
+//nodeTimeLimitCommon

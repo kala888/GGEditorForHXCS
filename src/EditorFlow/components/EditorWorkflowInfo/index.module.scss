@@ -1,0 +1,33 @@
+.editEditorName {
+  display: inline-flex;
+  min-width: 278px;
+  position: relative;
+  margin: 10px auto 0;
+  padding: 6px;
+  align-items: flex-end;
+  cursor: pointer;
+}
+
+.editorName {
+  flex: 1;
+  font-size: 16px;
+  color: #333333;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.editBbottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: 1px solid rgba(192, 196, 204, 0.50);
+}
+
+.ewf_block {
+ padding-bottom: 16px;
+}
+
+.editInput {
+  width: 100%;
+}
