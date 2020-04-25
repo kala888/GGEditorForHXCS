@@ -76,7 +76,7 @@ export default class EditorFlow extends React.Component<Props> {
         </Col>
         {/*中*/}
         <Col span={14} className={styles.editorContent}>
-          {/*工作流标题设置*/}
+          {/*工作流标题设置 这里的组件不需要替换 提前备份*/}
           <EditWorkFlowInfo />
           {/*画图*/}
           {JSON.stringify(flowData)!="{}"?

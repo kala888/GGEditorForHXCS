@@ -96,7 +96,8 @@ class InsertExpressionCommon extends React.Component<TemplateProps> {
               return <Row>
                 <Col><Input aria-label="please input"
                             value={item.fieldName}
-                            onChange={(value:any) => {
+                            onChange={(e:any) => {
+                              const {value}=e.target;
                               // this.state.nodeTimeXMLData.push({
                               //   // express: '业务数据>立案时间',
                               //   // lebel: '~businessData~',
@@ -113,7 +114,8 @@ class InsertExpressionCommon extends React.Component<TemplateProps> {
                 <Col>=</Col>
                 <Col><Input aria-label="please input"
                             value={item.value}
-                            onChange={(value:any) => {
+                            onChange={(e:any) => {
+                              const {value}=e.target;
                               item.value = value
                               this.forceUpdate()
                             }}

@@ -152,8 +152,13 @@ export const readerWorkFlow=(workflowMockItem)=>{
               }
               item["@attributes"].fieldModificationData.fieldModification=[];
               if(tempUpdate.update&&tempUpdate.update.length){
-                item["@attributes"].fieldModificationData.fieldModification=tempUpdate.update["@attributes"]
+                console.log("1111",tempUpdate.update);
+                
+                item["@attributes"].fieldModificationData.fieldModification=tempUpdate.update.map((item)=>{
+                  return item['@attributes']
+                })
               }else if(tempUpdate.update){
+                console.log("2222");
                 item["@attributes"].fieldModificationData.fieldModification.push(tempUpdate.update["@attributes"])
               }
           }

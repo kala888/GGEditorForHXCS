@@ -506,7 +506,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
         <NodeTimeLimitCommon componentTitle={"执行条件"} componentLabel={"动作条件"}
         nodeTimeLimitData={actionConditionData}
         callbackData={this.beforeActionRequirement}
-
+        
         />
         <div className={styles.detailform_con}>
           <div className={styles.detailform_titleCon}>

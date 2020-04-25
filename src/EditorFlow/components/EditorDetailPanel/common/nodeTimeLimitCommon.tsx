@@ -40,11 +40,14 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
     this.addDomTree=this.addDomTree.bind(this);
     this.beforeFieldModification=this.beforeFieldModification.bind(this);
   }
-
+  //添加form
   addDomTree(){
-    const {domTree}=this.state;
+    const {nodeTimeLimitState,nodeTimeLimit}=this.state.nodeTimeLimitData;
     this.setState({
-      domTree:[...domTree,{key:domTree[domTree.length-1].key+1}]
+      nodeTimeLimitData:{
+        nodeTimeLimitState,
+        nodeTimeLimit:[...nodeTimeLimit,{showText:""}]
+      }
     })
   }
 
@@ -85,7 +88,7 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
     })
   }
  
-  //选择表达式 节点时限 和执行人
+  //插入表达式 选择表达式 节点时限 和执行人
   beforeFieldModification=(value:any,key:any)=>{
     const {nodeTimeLimitData}=this.state;
     if(nodeTimeLimitData.type){
