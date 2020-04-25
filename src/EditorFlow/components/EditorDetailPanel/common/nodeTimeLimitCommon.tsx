@@ -42,15 +42,16 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
   }
   //添加form
   addDomTree(){
-    const {nodeTimeLimitState,nodeTimeLimit}=this.state.nodeTimeLimitData;
+    const {nodeTimeLimitState,nodeTimeLimit,type}=this.state.nodeTimeLimitData;
     this.setState({
       nodeTimeLimitData:{
         nodeTimeLimitState,
-        nodeTimeLimit:[...nodeTimeLimit,{showText:""}]
+        nodeTimeLimit:[...nodeTimeLimit,{showText:""}],
+        type
       }
     })
   }
-
+  //流程线 执行人
   delDomTree(key:any){
     const {domTree}=this.state;
     if(domTree.length==1){
@@ -91,10 +92,26 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
   //插入表达式 选择表达式 节点时限 和执行人
   beforeFieldModification=(value:any,key:any)=>{
     const {nodeTimeLimitData}=this.state;
+    console.log(value,key,"999xxxx",nodeTimeLimitData);
     if(nodeTimeLimitData.type){
       //执行人操作
       console.log(value,key,"999");
-      
+      nodeTimeLimitData.nodeTimeLimit.map((item:any,index:any)=>{
+        if(index===key){
+          item.showText=value;
+        }
+        return item;
+      })
+      this.setState({
+        nodeTimeLimitData
+      })
+      // 重构设这个对象
+      // const actionConditionData={actionConditionState:false,actionCondition:[]};
+      // actionConditionData.actionConditionState=nodeTimeLimitData.nodeTimeLimitState;
+      // actionConditionData.actionCondition=nodeTimeLimitData.nodeTimeLimit;
+      //最后保存这个克拉斯
+      const {callbackData}=this.props;
+      callbackData && callbackData(nodeTimeLimitData);
     }else{
       console.log(value,"valueXXXXXXXX");
       let _fieldValues = {
@@ -123,14 +140,8 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
 
   //这个是执行人的数据
   changeactionCondition=(value:any,key:any)=>{
-    const {nodeTimeLimitData}=this.state;
-    nodeTimeLimitData.tempEachTimeLimit.map((item:any,index:any)=>{
-      if(index===key){
-        item.showText=value
-      }
-    })
-    //继续执行 之后保存的操作
-    this.changeNoteTimeLimitDataCb(nodeTimeLimitData)
+    //先走这个吧
+    this.beforeFieldModification(value,key)
   }
 
   render() {
@@ -171,28 +182,6 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
                       onChange={(e) => {
                         const {value}=e.target;
                         this.changeactionCondition(value,index)
-                        // this.setState({
-                        //   nodeTimeLimitData:{...nodeTimeLimitData,
-                        //     actionCondition:[...nodeTimeLimitData.actionCondition,{key:item.key,showText:value}]
-                        //   }
-                        // })
-                        // if(nodeTimeLimit){
-                        //   const str=nodeTimeLimit.while;
-                        //   const Index=value.indexOf(str)
-                        //   if(Index!=-1){
-                          
-                        //     var strArr=value.split(str);
-                        //     // console.log(value,"value+++++",value.substring(Index),Index);
-                            
-                        //     this.changeNoteTimeLimitDataCb({
-                        //       nodeTimeLimitState:nodeTimeLimitData.nodeTimeLimitState,
-                        //       nodeTimeLimit:{...nodeTimeLimitData.nodeTimeLimit,
-                        //       value:strArr[Index>1?0:1]
-                        //     },showText:value
-                        //   })
-                        //   }
-
-                        // }
                         return false
                       }
                       }

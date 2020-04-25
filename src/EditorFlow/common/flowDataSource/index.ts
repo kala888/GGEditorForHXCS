@@ -158,18 +158,34 @@ export const XML_ImitateData = {
         },
 
         actionConditionData: {
-          actionConditionState: true,
-          // 动作条件 while表达式 (>,<,=)大于 小于 等于
-          // itemId 选取关联表字段，信息id信息
-          actionCondition: [{
-            // 此处未设置，库中俩个字段比较判断
-            while: '>',
-            itemId: '条件字段id信息',
-            tableName: '表名',
-            fieldName: '表中字段名',
-            fieldNameRemark: '表中字段名汉语说明',
-            value: '值信息',
-          }],
+          //启用状态以后 都 用这个属性名字
+          nodeTimeLimitState: false,
+          // 公用组件的内部属性名尽量一致 可以最后后台交互的时候改变属性名字 外面的属性名字 一定不要一样
+          nodeTimeLimit: [{
+                // 此处未设置，库中俩个字段比较判断
+                while: '>',
+                itemId: '条件字段id信息',
+                tableName: '表名',
+                fieldName: '表中字段名',
+                fieldNameRemark: '表中字段名汉语说明',
+                value: '值信息',
+                showText:"公式",
+                
+              }],
+          //加入区分类型
+          type:'action'
+          // actionConditionState: true,
+          // // 动作条件 while表达式 (>,<,=)大于 小于 等于
+          // // itemId 选取关联表字段，信息id信息
+          // actionCondition: [{
+          //   // 此处未设置，库中俩个字段比较判断
+          //   while: '>',
+          //   itemId: '条件字段id信息',
+          //   tableName: '表名',
+          //   fieldName: '表中字段名',
+          //   fieldNameRemark: '表中字段名汉语说明',
+          //   value: '值信息',
+          // }],
         },
 
         nextTypeData: {

@@ -369,7 +369,9 @@ class DetailForm extends React.Component<DetailFormProps,any> {
   //执行人的数据处理2
   beforeActionRequirement=(value:any)=>{
     console.log(value,"beforeActionRequirement");
-    
+    this.changeNodeField({
+      actionConditionData:value
+    })
   }
   // 设置动作
   actionNoteDlg = () => {
@@ -421,7 +423,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
         visible={this.state.noteActionState}
         // visible={true}
         footer={<Button  type="primary" onClick={()=>this.saveNodeField("cb")}>保存</Button>}
-        onOk={this.onClose.bind(this, 'okClick')}
+        onOk={this.onCloseSave.bind(this)}
         onCancel={this.onClose.bind(this, 'cancelClick')}
         
       >

@@ -32,7 +32,7 @@ class FieldModification extends React.Component<TemplateProps> {
 
   // 插入表达式
   onExpressChange = (e:any) => {
-    debugger;
+ 
     const {value}=e.target;
     const {fieldValueCb,IndexKey}: any = this.props
     let finnalValue =  `${value.express}`
