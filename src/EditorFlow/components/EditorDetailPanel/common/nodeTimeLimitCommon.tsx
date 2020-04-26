@@ -62,7 +62,7 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
 
     if(nodeTimeLimit.length>1){
         const tempNodeTimeLimit=nodeTimeLimit;
-        nodeTimeLimit.map((item,index)=>{
+        nodeTimeLimit.map((item:any,index:any)=>{
           
           if(index===key){
             tempNodeTimeLimit.splice(index,1)

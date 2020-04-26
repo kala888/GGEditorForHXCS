@@ -284,7 +284,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
   }
 
 
-  changeNextType=(e)=>{
+  changeNextType=(e:any)=>{
     const {model}=this.item;
      const {value}=e.target;
     console.log(value,model,"modelxxxx");
