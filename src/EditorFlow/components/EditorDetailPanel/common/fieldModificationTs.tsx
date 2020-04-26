@@ -1,14 +1,13 @@
 import React from 'react';
 // import {Button, Radio, Dialog} from '@alifd/next';
 import {Button, Radio, Modal} from 'antd';
-
+import _ from 'lodash';
 interface TemplateProps {
 
   fieldValueCb?: any,
   isActiveEdit?: any,
-  nodeTimeLimitData?:any,
-  compoentTitle?:string,
-  componentLabel?:string,
+  defaultValue?:string,
+  valueIndex?:number,
   IndexKey?:any
 }
 
@@ -49,9 +48,16 @@ class FieldModification extends React.Component<TemplateProps> {
     //   },
     //   showText:finnalValue
     // }
+    //@ts-ignore
+    String.prototype.splice = function(start, newStr) {
+      return this.slice(0, start) + newStr + this.slice(start);
+    };
+    let tempValue=_.get(this.props,"defaultValue","");
+    const tempValueIndex=_.get(this.props,"valueIndex",0);
     
-    
-    fieldValueCb && fieldValueCb(finnalValue,IndexKey)
+    //@ts-ignore
+    let newTempValue=tempValue.splice(tempValueIndex,finnalValue);
+    fieldValueCb && fieldValueCb(newTempValue,IndexKey)
   }
 
   // 表达式弹窗

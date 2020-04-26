@@ -1,11 +1,4 @@
 import React from 'react';
-// import {
-//   Button,
-//   Card, Collapse,
-//   Dialog, Divider, Field, Form,
-//   Grid, Input, Radio, Select,
-//   Table, TimePicker,
-// } from '@alifd/next';
 import {
   Button,
   Card, Collapse,
@@ -16,16 +9,10 @@ import {
   ,Row
 } from 'antd';
 import {withPropsAPI} from 'gg-editor';
-import {
-  // saveXML,
-  // exportXMLData,
-  // String2XML,
-  // XML2String
-} from "../../saveXML";
-// import NodeLeaderCommon from "../common/nodeLeaderCommon";
+import TrigMode from './TRIGMODE';
+
 import NodeTimeLimitCommon from "../common/nodeTimeLimitCommon";
-// import InsertExpressionCommon from "../common/insertExpressionCommon";
-// import FieldModification from "../common/fieldModificationTs";
+import _ from 'lodash'
 
 import {
   // XML_ImitateData,
@@ -38,30 +25,16 @@ import styles from '../index.module.scss';
 import CheckboxCommon from "../common/checkboxCommon";
 import Blockquote from "../common/blockquote";
 import SupplementaryNoteDlg from "./supplementaryNoteDlg";
-
+import saveWorkFlow from '../../../common/saveWorkFlow.jsx';
 const Panel = Collapse.Panel;
-// const _labelAlign = 'top'
-// const {
-//   Row,
-//   // Col
-// } = Grid;
-const RadioGroup = Radio.Group;
-// const upperFirst = (str: string) =>
-//   str.toLowerCase().replace(/( |^)[a-z]/g, (l: string) => l.toUpperCase());
 
-// const {Item} = Form;
+const RadioGroup = Radio.Group;
+
 const {Option} = Select;
 // @ts-ignore
 
 const FormItem = Form.Item;
-// const inlineFormItemLayout = {
-//   labelCol: {
-//     sm: {span: 8},
-//   },
-//   wrapperCol: {
-//     sm: {span: 16},
-//   },
-// };
+
 
 const formItemLayout = {
   labelCol: {
@@ -72,10 +45,7 @@ const formItemLayout = {
   }
 };
 
-// interface DetailFormProps extends FormComponentProps {
-//   type: string;
-//   propsAPI?: any;
-// }
+
 
 interface DetailFormProps {
   type: string;
@@ -108,8 +78,9 @@ class DetailForm extends React.Component<DetailFormProps,any> {
       //节点名称和备注
       nodeOptionState:{name:label||"",remark:nodeRemark||""},
       //动作名称和线型
-      actionOptionState:{name:label||"",shape:shape||""}
-      
+      actionOptionState:{name:label||"",shape:shape||""},
+      //节点动作弹窗刷新Key
+      nextTypeDataKey:"B"
     };
   }
 
@@ -118,18 +89,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
     return propsAPI.getSelected()[0];
   }
 
-  // handleFieldChange = () => {
-  //   const {form} = this.props;
-  //   const that = this
-  //   setTimeout(() => {
-  //     form.validateFieldsAndScroll((err, values) => {
-  //       if (err) {
-  //         return;
-  //       }
-  //       that.changeNodeField(values)
-  //     });
-  //   }, 0);
-  // };
+
 
   // 编辑选中node节点数据
   changeNodeField = (values: any) => {
@@ -193,7 +153,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
   }
 
   // 保存node节点数据 保存按钮操作
-  saveNodeField = (cb: any) => {
+  saveNodeField = () => {
     const {propsAPI} = this.props;
     const {getSelected, executeCommand, save} = propsAPI;
     const item = getSelected()[0];
@@ -206,22 +166,11 @@ class DetailForm extends React.Component<DetailFormProps,any> {
       console.log('pppddd_sss', nodeJson)
       
     });
+    saveWorkFlow(item);
+    this.onCloseSave()
   }
 
-  // handleSubmit = (e: React.FormEvent) => {
-  //   if (e && e.preventDefault) {
-  //     e.preventDefault();
-  //   }
-  //   this.handleFieldChange();
-  // };
 
-  // renderEdgeShapeSelect = () => (
-  //   <Select onChange={this.handleFieldChange}>
-  //     <Option value="flow-smooth">曲线</Option>
-  //     <Option value="flow-polyline">折线</Option>
-  //     <Option value="flow-polyline-round">圆曲折线</Option>
-  //   </Select>
-  // );
 
   onClose = (reason: any) => {
     console.log(reason, 'reason');
@@ -255,13 +204,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
     }
   }
 
-  onCloseSave = (e: any) => {
-    // 保存节点设置
-    // this.saveNodeField()
-    // todo 保存
-    // let  XMLDATA=saveXML(e)
-    console.log('pppddd_e....................',e)
-    // console.log(XMLDATA,"保存");
+  onCloseSave = () => {
     // 弹窗
     this.setState({
       noteActionState: false,
@@ -305,66 +248,56 @@ class DetailForm extends React.Component<DetailFormProps,any> {
   }
 
   // change
-  changeAction = (val: any, type: any) => {
-    console.log('pppddd_val, typeasdfasdf', val, type)
-    let _actionData = this.item.model.actionData || {
-      touchTypeData: {
-        touchDataState: false,
-        touchData: {
-          nodeData: {}
-        },
-      },
-      triggerTimeData: {},
-      actionConditionData: {},
-      nextTypeData: {},
-    }
-    let _actionTypeData = _actionData.touchTypeData || {}
-    let _touchData = _actionTypeData.touchData || {}
-    let _nodeData = _touchData.nodeData || {}
-    switch (type) {
-      case 'triggerMethod':
-        _actionData = {
-          actionData: {
-            ..._actionData,
-            touchTypeData: {
-              ..._actionTypeData,
-              touchData: {
-                ..._touchData,
-                type: val
-              }
-            },
-          }
-        }
-        // _actionData.touchTypeData.touchData.type = val
-        this.changeNodeField(_actionData)
-        break;
-      case 'buttonName':
-        _actionData = {
-          actionData: {
-            ..._actionData,
-            touchTypeData: {
-              ..._actionTypeData,
-              touchData: {
-                ..._touchData,
-                nodeData: {
-                  ..._nodeData,
-                  name: val
-                }
-              }
-            },
-          }
-        }
-        // _actionData.touchTypeData.touchData.nodeData.name = val
-        this.changeNodeField(_actionData)
-        break;
-      case 'triggerTime':
-        _actionData.triggerTimeData.triggerTime = val
-        this.changeNodeField(_actionData)
-        break;
-    }
+  changeAction = (val: any,options:any) => {
+    console.log('pppddd_val, typeasdfasdf', this.item.model,options)
+    const {touchTypeData}=this.item.model;
+    this.changeNodeField({
+      touchTypeData:{
+        type:val,
+        touchDataState:_.get(touchTypeData,'touchDataState',false),
+        showText:_.get(touchTypeData,'showText',""),
+        label:options.children
+      }
+    })
+    this.setnextTypeDataKey(val)
+  }
+
+  setnextTypeDataKey=(key:any)=>{
+    this.setState({
+      setnextTypeDataKey:key
+    })
+  }
+
+  //修改触发方式
+  changeActionChild = (value: any) => {
+    console.log('pppddd_val, typeasdfasdf', this.item.model,value)
+    const {touchTypeData}=this.item.model;
+    this.changeNodeField({
+      touchTypeData:{
+        type:_.get(touchTypeData,'type','B'),
+        touchDataState:_.get(touchTypeData,'touchDataState',false),
+        showText:value,
+        label:_.get(touchTypeData,'label','按钮触发'),
+      }
+    })
+
   }
 
 
+  changeNextType=(e)=>{
+    const {model}=this.item;
+     const {value}=e.target;
+    console.log(value,model,"modelxxxx");
+    const {nextTypeData}=model;
+    this.changeNodeField({
+      nextTypeData:{
+        nextTypeState:nextTypeData&&nextTypeData.nextTypeState||false,
+        type:value,
+        id:Math.round(Math.random()*100)
+      }
+    })
+
+  }
 
   //执行人的数据处理2
   beforeActionRequirement=(value:any)=>{
@@ -375,30 +308,25 @@ class DetailForm extends React.Component<DetailFormProps,any> {
   }
   // 设置动作
   actionNoteDlg = () => {
-    let _actionData = this.item.model.actionData || {}
-    let _actionTypeData = _actionData.touchTypeData || {}
-    let _touchData = _actionTypeData.touchData || {}
-    let _touchDataType = _touchData.type||"按钮触发"
-    // let _nodeData = _touchData.nodeData || {}
-    // let _nodeDataName = _nodeData.name
-    // const commonProps1 = {
-    //   extra: <Switch checkedChildren="on" onChange={(val) => this.onChange(val, 'triggerMethod')}
-    //                  unCheckedChildren="off" />
-    // };
-    // const commonProps2 = {
-    //   extra: <Switch checkedChildren="on" onChange={(val) => this.onChange(val, 'buttonName')}
-    //                  unCheckedChildren="off" />
+    const {model}=this.item;
+
+    const {touchTypeData}=model;
+    // let _touchDataType = touchTypeData&&touchTypeData.label||"按钮触发"
+    let _touchDataType = _.get(touchTypeData,"label","按钮触发")
+    let _touchDataShowText = _.get(touchTypeData,"showText","")
 
     const list = [
       {
-        value: '跳转下一节点',
+        value: 'N',
         label: '跳转下一节点'
       }, {
-        value: '启动新流程',
+        value: 'W',
         label: '启动新流程'
       }
     ];
-    const actionConditionData={
+    console.log(this.item.model,"11111");
+    
+    const actionConditionData=model.actionConditionData||{
       //启用状态以后 都 用这个属性名字
       nodeTimeLimitState: false,
       // 公用组件的内部属性名尽量一致 可以最后后台交互的时候改变属性名字 外面的属性名字 一定不要一样
@@ -422,8 +350,8 @@ class DetailForm extends React.Component<DetailFormProps,any> {
         title=""
         visible={this.state.noteActionState}
         // visible={true}
-        footer={<Button  type="primary" onClick={()=>this.saveNodeField("cb")}>保存</Button>}
-        onOk={this.onCloseSave.bind(this)}
+        footer={<Button  type="primary" onClick={()=>this.saveNodeField()}>保存</Button>}
+        
         onCancel={this.onClose.bind(this, 'cancelClick')}
         
       >
@@ -435,7 +363,6 @@ class DetailForm extends React.Component<DetailFormProps,any> {
             defaultValue={actionOptionState.name} readOnly />
           </div>
         </div>
-        <div className={styles.df_nodeHei6}></div>
         {/*this.onChangeTab*/}
         <div className={styles.detailform_cons}>
           <div className={styles.detailform_titleCon}>
@@ -448,7 +375,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
                     defaultValue={_touchDataType}
                     style={{width:"179px"}}
                     dropdownMatchSelectWidth
-                    onChange={(val) => this.changeAction(val, 'triggerMethod')} >
+                    onChange={(val,options) => this.changeAction(val,options)} >
                       {triggerMethodSource.map((item)=>{
                         return <Option value={item.value}>{item.label}</Option>
                       })}
@@ -456,6 +383,11 @@ class DetailForm extends React.Component<DetailFormProps,any> {
           </Row>
           <Divider dashed />
         </div>
+        <TrigMode type={_.get(model,'touchTypeData.type',"")}
+        changeActionChild={this.changeActionChild}  
+        value={_touchDataShowText}
+        setnextTypeDataKey={this.setnextTypeDataKey}
+        />
         {/* <div className={styles.detailform_con}>
           <div className={styles.detailform_titleCon}>
             <Blockquote content={'按钮名称'} />
@@ -518,7 +450,10 @@ class DetailForm extends React.Component<DetailFormProps,any> {
           <div style={{paddingBottom: '8px'}}>
             专利类型:
             <RadioGroup options={list}
-                        onChange={(val) => console.log(val)}
+                        defaultValue={model.nextTypeData&&model.nextTypeData.type}
+                        onChange={(val) => {
+                          this.changeNextType(val)
+                        }}
             />
           </div>
           <Row>
@@ -821,7 +756,7 @@ class DetailForm extends React.Component<DetailFormProps,any> {
     return <Form {...formItemLayout}>
       <Collapse 
       bordered={false}
-      // defaultExpandedKeys={['nodeAttr', 'nodeAction']}
+      defaultActiveKey={['nodeAttr', 'nodeAction']}
       >
         {type === 'node' && this.nodeTypePannel()}
         {type === 'edge' && this.edgeTypePannel()}
@@ -870,7 +805,9 @@ class DetailForm extends React.Component<DetailFormProps,any> {
             })
           }} />:null}
           {/*设置动作弹窗*/}
-          {this.actionNoteDlg()}
+          <div key={this.state.nextTypeDataKey}>
+            {this.actionNoteDlg()}
+          </div>
           {/*确定删除弹窗*/}
           {this.makeSureToDelDlg()}
         </Card>

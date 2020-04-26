@@ -43,23 +43,42 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
   //添加form
   addDomTree(){
     const {nodeTimeLimitState,nodeTimeLimit,type}=this.state.nodeTimeLimitData;
+    console.log(nodeTimeLimit,"nodeTimeLimit");
+    
     this.setState({
       nodeTimeLimitData:{
         nodeTimeLimitState,
         nodeTimeLimit:[...nodeTimeLimit,{showText:""}],
         type
       }
+    },()=>{
+    console.log(this.state.nodeTimeLimitData.nodeTimeLimit,"laternodeTimeLimit");
+
     })
   }
-  //流程线 执行人
+  //只有执行条件 才会走 流程线 执行人
   delDomTree(key:any){
-    const {domTree}=this.state;
-    if(domTree.length==1){
-      return;
+    const {nodeTimeLimitState,nodeTimeLimit,type}=this.state.nodeTimeLimitData;
+
+    if(nodeTimeLimit.length>1){
+        const tempNodeTimeLimit=nodeTimeLimit;
+        nodeTimeLimit.map((item,index)=>{
+          
+          if(index===key){
+            tempNodeTimeLimit.splice(index,1)
+
+          }
+        })
+        console.log(nodeTimeLimitState,type,tempNodeTimeLimit);
+        
+        this.setState({
+          nodeTimeLimitData:{
+            nodeTimeLimitState,
+            type,
+            nodeTimeLimit:tempNodeTimeLimit
+          }
+        })
     }
-    this.setState({
-      domTree:domTree.filter((item:any)=>(item.key!=key))
-    })
   }
 
   componentWillReceiveProps(nextProps: Readonly<TemplateProps>, nextContext: any): void {
@@ -224,8 +243,6 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
               </Col>
               <Col span={6} offset={1}>
                 <FieldModification
-
-                  nodeTimeLimitData={nodeTimeLimitData}
                   fieldValueCb={this.beforeFieldModification}
                   IndexKey={index}
                 />

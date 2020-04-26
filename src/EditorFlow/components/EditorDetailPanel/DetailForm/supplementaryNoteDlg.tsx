@@ -14,7 +14,7 @@ import styles from '../index.module.scss';
 // //src\components\EditorFlow\common\flowDataSource\index.ts
 // import { XMLDataJson } from '../../../../EditorFlow/common/flowDataSource';
 
-import saveWorkFlow from '../../../common/saveWorkFlow';
+import saveWorkFlow from '../../../common/saveWorkFlow.jsx';
 interface SupplementaryNoteDlgProps {
   closeVisible?: () => void,
   visible: boolean,

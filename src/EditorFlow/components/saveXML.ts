@@ -98,13 +98,45 @@ export function saveXML(json: any = XML_ImitateData, createFile?: any) {
   });
   
   // 指向线
-  if (json.edges && json.edges.length > 0) {
+  if (json.action && json.action.length > 0) {
     // BPMNShape += `<edges>\n`
-    json.edges.forEach((jedge:any) => {
-      BPMNShape += `<edge target="${jedge.target}" source="${jedge.source}" label="${jedge.label}" 
+    json.action.forEach((jedge:any) => {
+      BPMNShape += `<action target="${jedge.target}" source="${jedge.source}" label="${jedge.label}" 
       while="${jedge.while}" itemId="${jedge.id}" tableName="${jedge.tableName}" fieldName="${jedge.fieldName}" fieldNameRemark="${jedge.fieldNameRemark}" value="${jedge.value}"
-      ></edge>\n`
+      >\n`+
+      `<set>\n`
+      //执行条件
+      if (jedge.actionConditionData) {
+        BPMNShape += `<whiles nodeTimeLimitState="${jedge.actionConditionData.nodeTimeLimitState}" type="action">\n`
+        jedge.actionConditionData.nodeTimeLimit.forEach((action:any) => {
+          BPMNShape += `<while  type="${action.type}" name="${action.name}" id="${action.id}"  showText="${action.showText}"/>\n`
+        })
+        BPMNShape += `</whiles>\n`
+     
+      }
+      //执行动作
+      if (jedge.nextTypeData) {
+          const nextType=jedge.nextTypeData;
+       
+          BPMNShape += `<next  nextTypeState="${nextType.nextTypeState}"  type="${nextType.type}"  id="${nextType.id}" />\n`
+       
+     
+      }
+
+       //按钮触发方式 和 详细信息
+       if (jedge.touchTypeData) {
+        const touchTypeData=jedge.touchTypeData;
+        BPMNShape += `<touch   touchDataState="${touchTypeData.touchDataState}"  type="${touchTypeData.type}" label="${touchTypeData.label}" id="${touchTypeData.id}" showText="${touchTypeData.showText}"/>\n`
+   
+        }
+      BPMNShape += `</set>\n` +
+      `</action>\n`
     })
+    // json.edges.forEach((jedge:any) => {
+    //   BPMNShape += `<edge target="${jedge.target}" source="${jedge.source}" label="${jedge.label}" 
+    //   while="${jedge.while}" itemId="${jedge.id}" tableName="${jedge.tableName}" fieldName="${jedge.fieldName}" fieldNameRemark="${jedge.fieldNameRemark}" value="${jedge.value}"
+    //   ></edge>\n`
+    // })
     // BPMNShape += `</edges>\n`
   }
   

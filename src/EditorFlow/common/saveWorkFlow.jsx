@@ -16,7 +16,7 @@ const saveWorkFlow=(item)=>{
       const nodes=[
         ...Object.values(item.dataMap)
       ]
-      const edges=nodes.filter((item)=>(item.target));
+      const action=nodes.filter((item)=>(item.target));
       
       //     id: "29c97575"
       // source: "74bf735e"
@@ -37,7 +37,7 @@ const saveWorkFlow=(item)=>{
           //
           // @ts-ignore
       let JSONData={ dataObj,nodes,
-            edges
+            action
       }
       let xmldata=XMLDataJson(JSONData)
       console.log('pppddd_e....................',item,xmldata,JSONData)
@@ -123,88 +123,119 @@ export const readerWorkFlow=(workflowMockItem)=>{
       console.log(dataTemp.workflow,"dataTemp.workflow");
       
       if(dataTemp.workflow){
-        //节点设置
-        flowData.nodes=dataTemp.workflow&&dataTemp.workflow[1]["flows"].node.map((item)=>{
-          console.log(item,"不思进取");
-          //节点负责人
-          if(item.set.nodeLeaderData){
-            if(item.set.nodeLeaderData.length){
-  
-              item["@attributes"].nodeLeaderData=item.set.nodeLeaderData["@attributes"]
-            }else{
-              item["@attributes"].nodeLeaderData=[];
-              item["@attributes"].nodeLeaderData.push(item.set.nodeLeaderData["@attributes"])
+
+        if(dataTemp.workflow[1]["flows"]){
+        const flows=dataTemp.workflow[1]["flows"];
+        if(flows.node){
+          const tempNode=flows.node.length?flows.node:[flows.node];
+            //节点设置
+            flowData.nodes=tempNode.map((item)=>{
+              console.log(item,"不思进取");
+              //节点负责人
+              if(item.set.nodeLeaderData){
+                if(item.set.nodeLeaderData.length){
+      
+                  item["@attributes"].nodeLeaderData=item.set.nodeLeaderData["@attributes"]
+                }else{
+                  item["@attributes"].nodeLeaderData=[];
+                  item["@attributes"].nodeLeaderData.push(item.set.nodeLeaderData["@attributes"])
+                }
+              }
+              //节点时限
+              if(item.set.limit){
+                  item["@attributes"].nodeTimeLimitData={
+                      nodeTimeLimitState:true,
+                      nodeTimeLimit:[item.set.limit["@attributes"]],
+                      showText:item.set.limit["@attributes"].showText
+                      }
+              }
+              //修改字段数据
+              if(item.set.updates){
+                  const tempUpdate=item.set.updates;
+                  item["@attributes"].fieldModificationData={
+                    fieldModificationState:tempUpdate["@attributes"].fieldModificationState,
+                  }
+                  item["@attributes"].fieldModificationData.fieldModification=[];
+                  if(tempUpdate.update&&tempUpdate.update.length){
+                    console.log("1111",tempUpdate.update);
+                    
+                    item["@attributes"].fieldModificationData.fieldModification=tempUpdate.update.map((item)=>{
+                      return item['@attributes']
+                    })
+                  }else if(tempUpdate.update){
+                    console.log("2222");
+                    item["@attributes"].fieldModificationData.fieldModification.push(tempUpdate.update["@attributes"])
+                  }
+              }
+              //节点通知
+              if(item.set.notices){
+                  const notices=item.set.notices;
+                  item["@attributes"].notificationInformationData={
+                    type:"EMAIL"
+                  }
+                  // console.log(item.set.notices,"item.set.notices");
+                  item["@attributes"].notificationInformationData.infoData=[];
+                  if(notices.notice&&notices.notice.length){
+                    item["@attributes"].notificationInformationData.infoData=notices.notice.map((item)=>{
+                      return item['@attributes']
+                    })
+                  }else if(notices.notice){
+                    item["@attributes"].notificationInformationData.infoData.push(notices.notice["@attributes"])
+                  }
+              }
+
+              if(item["@attributes"].x!=="undefined"){
+                item["@attributes"].x=Number(item["@attributes"].x);
+                item["@attributes"].y=Number(item["@attributes"].y);
+              }
+              return item["@attributes"]
+            }).filter((item)=>{
+      
+              return item.x!=="undefined"
+            });;
+
+        }  
+        //edges
+        
+        // if(flows.action&&flows.action.length){
+          if(flows.action){
+          const tempAction=flows.action.length?flows.action:[flows.action];
+              flowData.edges=tempAction.map((item)=>{
+                //名称设置
+                if(item["@attributes"].label==="undefined"){
+                  item["@attributes"].label="流程线"
+                }
+
+                if(item.set.touch){
+                  const tempTouch=item.set.touch
+                  item["@attributes"].touchTypeData={...tempTouch["@attributes"]}
+                  
+                }
+
+                //流程执行条件
+                if(item.set.whiles){
+                  const whiles=item.set.whiles;
+                  item["@attributes"].actionConditionData={};
+                  item["@attributes"].actionConditionData['nodeTimeLimitState']=whiles["@attributes"].nodeTimeLimitState;
+                  item["@attributes"].actionConditionData.type="action";
+                  const tempwhile=whiles.while.length?whiles.while:[whiles.while];
+                  item["@attributes"].actionConditionData.nodeTimeLimit=tempwhile.map((item)=>{
+                    return item["@attributes"]
+                  });
+                  
+                }
+                //流程执行动作
+                if(item.set.next){
+                    const next=item.set.next;
+                    item["@attributes"].nextTypeData={...next["@attributes"]};
+                }
+
+
+                return item["@attributes"]
+              })
             }
           }
-          //节点时限
-          if(item.set.limit){
-              item["@attributes"].nodeTimeLimitData={
-                  nodeTimeLimitState:true,
-                  nodeTimeLimit:[item.set.limit["@attributes"]],
-                  showText:item.set.limit["@attributes"].showText
-                  }
-          }
-          //修改字段数据
-          if(item.set.updates){
-              const tempUpdate=item.set.updates;
-              item["@attributes"].fieldModificationData={
-                fieldModificationState:tempUpdate["@attributes"].fieldModificationState,
-              }
-              item["@attributes"].fieldModificationData.fieldModification=[];
-              if(tempUpdate.update&&tempUpdate.update.length){
-                console.log("1111",tempUpdate.update);
-                
-                item["@attributes"].fieldModificationData.fieldModification=tempUpdate.update.map((item)=>{
-                  return item['@attributes']
-                })
-              }else if(tempUpdate.update){
-                console.log("2222");
-                item["@attributes"].fieldModificationData.fieldModification.push(tempUpdate.update["@attributes"])
-              }
-          }
-          //节点通知
-          if(item.set.notices){
-              const notices=item.set.notices;
-              item["@attributes"].notificationInformationData={
-                type:"EMAIL"
-              }
-              // console.log(item.set.notices,"item.set.notices");
-              item["@attributes"].notificationInformationData.infoData=[];
-              if(notices.notice&&notices.notice.length){
-                item["@attributes"].notificationInformationData.infoData=notices.notice.map((item)=>{
-                  return item['@attributes']
-                })
-              }else if(notices.notice){
-                item["@attributes"].notificationInformationData.infoData.push(notices.notice["@attributes"])
-              }
-          }
-
-          if(item["@attributes"].x!=="undefined"){
-            item["@attributes"].x=Number(item["@attributes"].x);
-            item["@attributes"].y=Number(item["@attributes"].y);
-          }
-          return item["@attributes"]
-        }).filter((item)=>{
-  
-          return item.x!=="undefined"
-        });;
-        if(dataTemp.workflow[1]["flows"].edge.length){
-          flowData.edges=dataTemp.workflow&&dataTemp.workflow[1]["flows"].edge.map((item)=>{
-            return item["@attributes"]
-          })
-        }else{
-          flowData.edges[0]=dataTemp.workflow&&dataTemp.workflow[1]["flows"].edge["@attributes"];
-        }
       }
-      flowData.edges.map((item)=>{
-        if(item.label==="undefined"){
-          item.label="流程线"
-        }
-        
-        return item
-      })
-  
-      
       console.log('pppddd_arrangeNodes',xmlToJson(XmlNode),flowData)
       return flowData;
 }

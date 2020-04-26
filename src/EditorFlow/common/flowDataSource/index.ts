@@ -190,7 +190,7 @@ export const XML_ImitateData = {
 
         nextTypeData: {
           nextTypeState: true,
-          // 执行 type（N 下一节点, W 下一流程）
+          // 执行 type（N 跳转下一节点, W 启动新流程）
           nextType: {
             type: 'W',
             id: '工作流id（N 下一节点id）',
@@ -381,12 +381,12 @@ interface edgesType{
 interface XMLJson{
   dataObj?:dataObjType;
   nodes:[nodeObjType];
-  edges:[edgesType]
+  action:[edgesType]
 }
 
 export const XMLDataJson=(props:XMLJson)=>{
-  const {dataObj,nodes,edges}=props;
+  const {dataObj,nodes,action}=props;
   return {
-    dataObj,nodes,edges
+    dataObj,nodes,action
   }
 }

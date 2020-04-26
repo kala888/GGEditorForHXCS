@@ -2,12 +2,12 @@ import React from 'react';
 //import {Button, Dialog, Field, Form, Input} from '@alifd/next';
 import {Button, Modal, Form, Input} from 'antd';
 // import {withPropsAPI} from 'gg-editor';
-import {connect} from 'react-redux';
+// import {connect} from 'react-redux';
 // @ts-ignore
 import styles from './index.module.scss';
 import Blockquote from "../EditorDetailPanel/common/blockquote";
 // import {Dispatch, IRootState} from "../../../../store";
-import {withRouter} from "react-router";
+// import {withRouter} from "react-router";
 import _ from 'lodash';
 const FormItem = Form.Item;
 
