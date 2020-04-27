@@ -20,14 +20,17 @@ interface Props {
   flowData?: any
 }
 
-export default class EditorFlow extends React.Component<Props> {
+export default class EditorFlow extends React.Component<Props,any> {
   editorRef: any = React.createRef();
 
 
   constructor(props:any) {
     super(props);
     this.state = {
-      flowData: {}
+      flowData: {},
+      dataObj:{},
+      //数据展示
+      flowDataModel:{},
     }
    
   }
@@ -37,6 +40,17 @@ export default class EditorFlow extends React.Component<Props> {
     this.arrangeNodesData()
   }
 
+  setDataObj=(dataObj)=>{
+    this.setState({
+      dataObj
+    })
+  }
+
+  setFlowData=(flowDataModel)=>{
+    this.setState({
+      flowDataModel
+    })
+  }
 
   
   // 整理数据
@@ -46,9 +60,12 @@ export default class EditorFlow extends React.Component<Props> {
 
     // 解析前端数据
     let flowData=readerWorkFlow(workflowMockItem);
+
    
     this.setState({
-      flowData
+      flowData,
+      flowDataModel:flowData,
+      dataObj:flowData.dataObj||{}
     })
   }
 
@@ -58,16 +75,16 @@ export default class EditorFlow extends React.Component<Props> {
     //
     // @ts-ignore
 
-    const {flowData}: any = this.state
-    console.log(flowData,"flowData");
+    const {flowData,dataObj,flowDataModel}: any = this.state
+    console.log(flowData,"flowData",this.state.dataObj);
     
     // 流程图
     return <GGEditor className={styles.editor}>
       <Row className={styles.editorHd}>
-        <Col span={24}>
+        
           {/*工具栏*/}
           <FlowToolbar />
-        </Col>
+        
       </Row>
       <Row className={styles.editorBd}>
         {/*左侧*/}
@@ -77,7 +94,7 @@ export default class EditorFlow extends React.Component<Props> {
         {/*中*/}
         <Col span={14} className={styles.editorContent}>
           {/*工作流标题设置 这里的组件不需要替换 提前备份*/}
-          <EditWorkFlowInfo />
+          <EditWorkFlowInfo  setDataObj={this.setDataObj} flowData={flowDataModel} dataObj={dataObj}/>
           {/*画图*/}
           {JSON.stringify(flowData)!="{}"?
           <Flow ref={this.editorRef}
@@ -90,7 +107,7 @@ export default class EditorFlow extends React.Component<Props> {
         {/*右*/}
         <Col span={6} className={styles.editorSidebar}>
           {/*画布属性*/}
-          <FlowDetailPanel />
+          <FlowDetailPanel  dataObj={this.state.dataObj}  setFlowData={this.setFlowData.bind(this)}/>
           {/*缩略图*/}
           <EditorMinimap />
         </Col>

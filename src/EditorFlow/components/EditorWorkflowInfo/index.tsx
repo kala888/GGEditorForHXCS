@@ -3,17 +3,20 @@ import React from 'react';
 import {Button, Modal, Form, Input} from 'antd';
 // import {withPropsAPI} from 'gg-editor';
 // import {connect} from 'react-redux';
+
 // @ts-ignore
 import styles from './index.module.scss';
 import Blockquote from "../EditorDetailPanel/common/blockquote";
 // import {Dispatch, IRootState} from "../../../../store";
-// import {withRouter} from "react-router";
+import {setWorkFlowOnlyDataObj} from '../../common/saveWorkFlow';
 import _ from 'lodash';
 const FormItem = Form.Item;
 
 interface EditWorkFlowInfoProps {
   dataObj?: any
-  setWorkFlow?:Function
+  setWorkFlow?:Function,
+  setDataObj?:Function,
+  flowData?:any
 }
 
 const formItemLayout = {
@@ -25,7 +28,7 @@ const formItemLayout = {
   }
 };
 
-class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
+class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps,any> {
   myRef: React.RefObject<any>;
   workOptionRef: React.RefObject<any>;
   //field = new Field(this);
@@ -36,10 +39,7 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
     this.workOptionRef=React.createRef()
     this.state = {
       editflowInfoState: false,
-      workFlow:{
-        name:"",
-        remark:"",
-      },
+
       dataObj: props.dataObj || {
         name: '工作流名称',
         remark: '',
@@ -72,12 +72,13 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
 
   // 保存
   saveChange = () => {
-    this.saveFlowField()
+    
     this.closeFlowDlg()
-    const {workFlow}:any=this.state;
     console.log(Form,"Formxxx",this.myRef.current.state.value);
     this.setState({
-      workFlow:{...workFlow,name:this.myRef.current.state.value}
+      dataObj:{remark:this.workOptionRef.current.state.value,name:this.myRef.current.state.value}
+    },()=>{
+      this.saveFlowField()
     })
     // this.editFlowInfo()
   }
@@ -86,9 +87,11 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
   saveFlowField = () => {
     // 不可设置 此为设置节点 结构不同
     // @ts-ignore
-    const {propsAPI}: any = this.props;
-
-
+    const {dataObj}=this.state;
+    const {setDataObj,flowData}: any = this.props;
+    setDataObj(dataObj)
+    console.log(this.props,"编辑工作流信息");
+    setWorkFlowOnlyDataObj(dataObj,flowData);
    // this.props.setWorkFlow&&this.props.setWorkFlow(_.get(this.field.values,""))
 
     //console.log('pppddd_propsAPI', propsAPI, this.field, this.props, this.field.values, this.props.workflowData)
@@ -128,13 +131,13 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
     const {
       editflowInfoState,
       // dataObj
-      workFlow
+      dataObj
     }: any = this.state
     // let _dataObj = dataObj
     return (
       <>
         <div className={styles.editEditorName} onClick={this.editFlowInfo}>
-          <div className={styles.editorName}>{workFlow.name}</div>
+          <div className={styles.editorName}>{dataObj.name}</div>
           <Button type="primary" >编辑</Button>
           <div className={styles.editBbottom} />
         </div>
@@ -146,7 +149,7 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
           <div className={styles.ewf_block}>
             <Blockquote content={'编辑工作流信息'} />
           </div>
-          <Form {...formItemLayout}  initialValues={{name:workFlow.name,remark:workFlow.remark}}>
+          <Form {...formItemLayout} >
             <FormItem
               label="工作流名称:"
               hasFeedback
@@ -155,7 +158,7 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
               <Input
                 className={styles.editInput}
                 maxLength={7}
-               
+                defaultValue={dataObj.name}
                 placeholder="请输入工作流名称"
                 // hasLimitHint
                 // cutString={false}
@@ -178,6 +181,7 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
                 placeholder="请输入工作流说明"
                 rows={4}
                 // hasLimitHint
+                defaultValue={dataObj.remark}
                 ref={this.workOptionRef}
                 name={'remark'}
                
@@ -193,12 +197,12 @@ class EditWorkFlowInfos extends React.Component<EditWorkFlowInfoProps> {
 
 // const mapState = (state: IRootState) => {
 //   return {
-//     workflowData: state.workFlow.workflowData
+//     workflowData: state.dataObj.workflowData
 //   };
 // };
 
 // const mapDispatch = (dispatch: Dispatch):any => ({
-//   setWorkFlow: () => dispatch.workFlow.setWorkFlow(),
+//   setWorkFlow: () => dispatch.dataObj.setWorkFlow(),
 // });
 
 // const EditWorkflowInfo = withRouter(EditWorkFlowInfos as any)

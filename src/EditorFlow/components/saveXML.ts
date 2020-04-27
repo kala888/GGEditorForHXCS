@@ -1,5 +1,5 @@
 import {XML_ImitateData} from "../common/flowDataSource";
-
+import _ from 'lodash';
 
 declare global {
   interface Window {
@@ -21,7 +21,7 @@ export function saveXML(json: any = XML_ImitateData, createFile?: any) {
   
   let BPMNCommon = `<workflow>\n` +
   `<initial-actions>\n` +
-  `<action id="${json.dataObj.id}" name="${json.dataObj.name}" remark="${json.dataObj.remark}">\n` +
+  `<action id="${json.dataObj.id}" name="${_.get(json,'dataObj.name',"")}" remark="${_.get(json,'dataObj.remark',"")}">\n` +
   `<results>\n` +
   `<unconditional-result old-status="Finished" status="Underway" step="1"/>\n` +
   `</results>\n` +
@@ -32,8 +32,12 @@ export function saveXML(json: any = XML_ImitateData, createFile?: any) {
   let BPMNEdge = ``;
   json.nodes && json.nodes.length > 0 && json.nodes.forEach((node:any) => {
     console.log(node,"jsonnnn");
-    
-    BPMNShape += `<node name="${node.name}" childFlowId="${node.childFlowId}" type="${node.type}" actionId="${node.actionId}" pid="${node.pid}" shape="${node.shape}" size="${node.size}" x="${node.x}" y="${node.y}" id="${node.id}" label="${node.label}" color="${node.color}">\n` +
+    if(!node.target){
+
+  
+    BPMNShape += `<node name="${node.name}" childFlowId="${node.childFlowId}" type="${node.type}" actionId="${node.actionId}" pid="${node.pid}" 
+    shape="${node.shape}" size="${node.size}" x="${node.x}" y="${node.y}" id="${node.id}" label="${node.label}" nodeRemark="${_.get(node,'nodeRemark',"")}"
+    color="${node.color}">\n` +
  
     `<set>\n`
     if (node.nodeLeaderData &&node.nodeLeaderData.length > 0 ) {
@@ -47,17 +51,10 @@ export function saveXML(json: any = XML_ImitateData, createFile?: any) {
         />\n`
       })
     }
-    if (node.nodeTimeLimitData && node.nodeTimeLimitData.nodeTimeLimitState && Object.keys(node.nodeTimeLimitData.nodeTimeLimit).length > 0) {
+    if (node.nodeTimeLimitData && node.nodeTimeLimitData && Object.keys(node.nodeTimeLimitData.nodeTimeLimit).length > 0) {
       BPMNShape += `<limit while="${node.nodeTimeLimitData.nodeTimeLimit.while}" itemId="${node.nodeTimeLimitData.nodeTimeLimit.itemId}" tableName="${node.nodeTimeLimitData.nodeTimeLimit.tableName}" fieldName="${node.nodeTimeLimitData.nodeTimeLimit.fieldName}" fieldNameRemark="${node.nodeTimeLimitData.nodeTimeLimit.fieldNameRemark}" value="${node.nodeTimeLimitData.nodeTimeLimit.value}"
         showText="${node.nodeTimeLimitData.showText}" nodeTimeLimitState="${node.nodeTimeLimitData.nodeTimeLimitState}"/>\n`
     }
-    // if (node.businessDataEditData && node.businessDataEditData.businessDataEdit && node.businessDataEditData.businessDataEdit.length > 0 && node.businessDataEditData.businessDataEditState) {
-    //   BPMNShape += `<updates>\n`
-    //   node.businessDataEditData.businessDataEdit.forEach((businessEdit) => {
-    //     BPMNShape += `<update tableName="${businessEdit.tableName}" fieldName="${businessEdit.fieldName}" fieldNameRemark="${businessEdit.fieldNameRemark}" value="${businessEdit.value}"/>\n`
-    //   })
-    //   BPMNShape += `</updates>\n`
-    // }
     if (node.fieldModificationData && node.fieldModificationData.fieldModification && node.fieldModificationData.fieldModification.length > 0) {
       BPMNShape += `<updates fieldModificationState="${node.fieldModificationData.fieldModificationState}">\n`
       node.fieldModificationData.fieldModification.forEach((f:any) => {
@@ -76,32 +73,14 @@ export function saveXML(json: any = XML_ImitateData, createFile?: any) {
     }
     BPMNShape += `</set>\n` +
     `</node>\n`;
-    
-    // BPMNShape += `<action id="${node.id}" nodeId="${node.source}"  target="${node.target}" source="${node.source}" label="${node.label}">\n`
-    // if (node.actionData && node.actionData.touchTypeData && node.actionData.touchTypeData.touchDataState && node.actionData.touchTypeData.touchData && Object.keys(node.actionData.touchTypeData.touchData).length > 0) {
-    //   BPMNShape += `<touch type="${node.actionData.touchTypeData.touchData.type}">\n` +
-    //   `<button name="${node.actionData.touchTypeData.touchData.nodeData.name}" remark="${node.actionData.touchTypeData.touchData.nodeData.remark}" id="${node.actionData.touchTypeData.touchData.nodeData.id}" />\n` +
-    //   `</touch>\n`
-    // }
-    // if (node.actionData && node.actionData.actionConditionData && node.actionData.actionConditionData.actionConditionState && node.actionData.actionConditionData.actionCondition && node.actionData.actionConditionData.actionCondition.length > 0) {
-    //   BPMNShape += `<whiles>\n`
-    //   node.actionData.actionConditionData.actionCondition.forEach((actionCon) => {
-    //     BPMNShape += `<while while="${actionCon.while}" itemId="${actionCon.itemId}" tableName="${actionCon.tableName}" fieldName="${actionCon.fieldName}" fieldNameRemark="${actionCon.fieldNameRemark}" value="${actionCon.value}"/>\n`
-    //   })
-    //   BPMNShape += `</whiles>\n`
-    // }
-    // if (node.actionData && node.actionData.nextTypeData && node.actionData.nextTypeData.nextTypeState && node.actionData.nextTypeData.nextType && Object.keys(node.actionData.nextTypeData.nextType).length > 0) {
-    //   BPMNShape += `<next type="${node.actionData.nextTypeData.nextType.type}" id="${node.actionData.nextTypeData.nextType.id}"/>\n`
-    // }
-    // BPMNShape += `</action>\n`
-    
+    }
   });
   
   // 指向线
   if (json.action && json.action.length > 0) {
     // BPMNShape += `<edges>\n`
     json.action.forEach((jedge:any) => {
-      BPMNShape += `<action target="${jedge.target}" source="${jedge.source}" label="${jedge.label}" 
+      BPMNShape += `<action target="${jedge.target}" source="${jedge.source}" label="${jedge.label}" shape="${_.get(jedge,'shape',"flow-smooth")}"
       while="${jedge.while}" itemId="${jedge.id}" tableName="${jedge.tableName}" fieldName="${jedge.fieldName}" fieldNameRemark="${jedge.fieldNameRemark}" value="${jedge.value}"
       >\n`+
       `<set>\n`
@@ -132,12 +111,6 @@ export function saveXML(json: any = XML_ImitateData, createFile?: any) {
       BPMNShape += `</set>\n` +
       `</action>\n`
     })
-    // json.edges.forEach((jedge:any) => {
-    //   BPMNShape += `<edge target="${jedge.target}" source="${jedge.source}" label="${jedge.label}" 
-    //   while="${jedge.while}" itemId="${jedge.id}" tableName="${jedge.tableName}" fieldName="${jedge.fieldName}" fieldNameRemark="${jedge.fieldNameRemark}" value="${jedge.value}"
-    //   ></edge>\n`
-    // })
-    // BPMNShape += `</edges>\n`
   }
   
   
@@ -224,18 +197,7 @@ export function XML2Json(recursiveNodes) {
         let nodeLeaderDatas: any = []
         let nodesDatas: any = {}
         if (attrNodes && attrNodes.length > 0) {
-          //let nDatas: any = []
-          // attrNodes.forEach((aData, index) => {
-          //   // let nodesDatas = {}
-          //   // nodesDatas = {
-          //   //   ...nodesDatas,
-          //   //   [attrNodes.item(index).name]: attrNodes.item(index).value
-          //   // }
-          //   nodesDatas[attrNodes.item(index).name] = attrNodes.item(index).value
-          //   if (Object.keys(nodesDatas).length > 0) {
-          //     nDatas.push(nodesDatas)
-          //   }
-          // })
+
           console.log('pppddd__fData', nodesDatas)
           if (nodeName !== 'parsererror') {
             switch (nodeName) {

@@ -62,7 +62,7 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
 
     if(nodeTimeLimit.length>1){
         const tempNodeTimeLimit=nodeTimeLimit;
-        nodeTimeLimit.map((item:any,index:any)=>{
+        nodeTimeLimit.map((item,index)=>{
           
           if(index===key){
             tempNodeTimeLimit.splice(index,1)
@@ -92,8 +92,9 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
   beforeChangeNoteTimeLimitDataCb=(selectedItems:any)=>{
     const {nodeTimeLimitData}: any = this.state
     const nodeCurrent={
-      ...nodeTimeLimitData,
-      nodeTimeLimitState:selectedItems
+      showText:nodeTimeLimitData.showText,
+      nodeTimeLimitState:selectedItems,
+      nodeTimeLimit:nodeTimeLimitData.nodeTimeLimit
     }
     console.log('onChange callback', selectedItems,nodeTimeLimitData);
     this.changeNoteTimeLimitDataCb(nodeCurrent)
@@ -134,7 +135,7 @@ class NodeTimeLimitCommon extends React.Component<TemplateProps,any> {
     }else{
       console.log(value,"valueXXXXXXXX");
       let _fieldValues = {
-        nodeTimeLimitState:true,
+        nodeTimeLimitState:nodeTimeLimitData.nodeTimeLimitState||false,
         nodeTimeLimit:[{
           while:value,
           itemId: '条件字段id信息',

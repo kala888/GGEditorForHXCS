@@ -19,7 +19,9 @@ interface SupplementaryNoteDlgProps {
   closeVisible?: () => void,
   visible: boolean,
   propsAPI?: any,
-  nodeOptionState?:any
+  nodeOptionState?:any,
+  dataObj?:any,
+  setFlowData?:Function
 }
 
 const formItemLayout = {
@@ -78,21 +80,29 @@ class SupplementaryNoteDlg extends React.Component<SupplementaryNoteDlgProps> {
 
   onCloseSave = (e:any) => {
     
-    const {propsAPI} = this.props;
+    const {propsAPI,dataObj} = this.props;
     const {getSelected} = propsAPI;
     const item = getSelected()[0];
     const {closeVisible} = this.props
+
+    
     //设置格式 并储存
-    saveWorkFlow(item);
+    saveWorkFlow(item,dataObj);
     // 弹窗
     closeVisible&&closeVisible()
   }
   changeNodeName(e:any){
     console.log(e.target.value,"name");  
-   // this.field.setValue('name',e);
+    this.changeNodeField({
+      label:e.target.value
+    })
+
   }
-  changeNodeRemark(){
-    //this.field.setValue('remark',e);
+  changeNodeRemark(e:any){
+    console.log(e.target.value,"remark");  
+    this.changeNodeField({
+      nodeRemark:e.target.value
+    })
   }
   render() {
     console.log('pppddd_thisasdfasdf.item', this.item,this.props)
@@ -132,12 +142,12 @@ class SupplementaryNoteDlg extends React.Component<SupplementaryNoteDlgProps> {
           <div className={styles.df_nodeCon}>
             <div className={styles.df_nodeInfo}>节点信息</div>
             <div className={styles.df_nodeContent}>
-              <i>节点名称：</i><Input className={styles.df_nodeName} onChange={(e)=>this.changeNodeName(e)} readOnly 
+              <i>节点名称：</i><Input className={styles.df_nodeName} onChange={(e)=>this.changeNodeName(e)}  
               defaultValue={nodeOptionState.name}
               />
             </div>
             <div className={styles.df_nodeContent}>
-              <i>节点备注：</i><Input className={styles.df_nodeName} onChange={(e)=>this.changeNodeRemark()} readOnly
+              <i>节点备注：</i><Input className={styles.df_nodeName} onChange={(e)=>this.changeNodeRemark(e)} 
               defaultValue={nodeOptionState.remark}
               />
             </div>

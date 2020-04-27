@@ -7,46 +7,37 @@ import {
 //解析成后台数据 并 存储
 
 //@ts-ignore
-const saveWorkFlow=(item)=>{
+const saveWorkFlow=(item,dataObjs)=>{
+      commonSave(commonJSONData(item,dataObjs));
+}    
+export const setWorkFlowOnlyDataObj=(dataObj,other)=>{
+      let JSONData={ ...other,dataObj};
+      commonSave(JSONData);
+}
+export const commonJSONData=(item,dataObjs)=>{
     const dataObj={
-        id:String(Math.random()*10000),
-        // ...dataField
-      }
-      //节点 节点名字
-      const nodes=[
-        ...Object.values(item.dataMap)
-      ]
-      const action=nodes.filter((item)=>(item.target));
-      
-      //     id: "29c97575"
-      // source: "74bf735e"
-      // sourceAnchor: 2
-      // target: "b3bbc0fc"
-      // targetAnchor: 0
-      //
-      //{
-        //"dataObj":{"id":"3395.5758644768275"},
-        //"nodes":[
-          //{"type":"S","size":"72*72","shape":"flow-circle","color":
-          //"#FA8C16","label":"Start1","name":"开始","x":214.515625,"y":-79,"id":"516e950f"},
-          //{"type":"C","size":"80*48","shape":"flow-rect","color":"#1890F0","label":"子工作节点2",
-          // "name":"子工作","x":212.515625,"y":80,"id":"5aed684d"},{"source":"516e950f","sourceAnchor":2,"target":"5aed684d",
-          // "targetAnchor":0,"id":"eeacfb02"}],
-          //"edges"
-          //:[{"source":"516e950f","sourceAnchor":2,"target":"5aed684d","targetAnchor":0,"id":"eeacfb02"}]}
-          //
-          // @ts-ignore
-      let JSONData={ dataObj,nodes,
-            action
-      }
+      id:String(Math.random()*10000),
+      ...dataObjs
+    }
+    //节点 节点名字
+    const nodes=[
+      ...Object.values(item.dataMap)
+    ]
+    const action=nodes.filter((item)=>(item.target));
+
+    let JSONData={ dataObj,nodes,
+          action
+    }
+    return JSONData;
+}
+
+export const commonSave=(JSONData)=>{
       let xmldata=XMLDataJson(JSONData)
-      console.log('pppddd_e....................',item,xmldata,JSONData)
       let localData=saveXML(xmldata)
       localStorage.setItem("workflowMockItem",localData);
       console.log(localData,"localData",xmldata,JSONData);
-      
+      return JSONData;
 }
-
 export const readerWorkFlow=(workflowMockItem)=>{
     // ||saveXML()
     // string 转xml对象
@@ -115,15 +106,21 @@ export const readerWorkFlow=(workflowMockItem)=>{
       //:[{"source":"516e950f","sourceAnchor":2,"target":"5aed684d","targetAnchor":0,"id":"eeacfb02"}]}
       
       let flowData={
-       //dataObj:{},
+       dataObj:{},
         nodes:[],
         edges:[],
       }
-      //flowData.dataObj=dataTemp.workflow&&dataTemp.workflow[1]["initial-actions"].action["@attributes"];
       console.log(dataTemp.workflow,"dataTemp.workflow");
       
       if(dataTemp.workflow){
-
+        //
+        if(dataTemp.workflow[1]['initial-actions']){
+          const actionObj=dataTemp.workflow[1]['initial-actions']
+          if(actionObj.action&&actionObj.action["@attributes"]){
+            flowData.dataObj={...actionObj.action["@attributes"]}
+          }
+        }
+        //
         if(dataTemp.workflow[1]["flows"]){
         const flows=dataTemp.workflow[1]["flows"];
         if(flows.node){

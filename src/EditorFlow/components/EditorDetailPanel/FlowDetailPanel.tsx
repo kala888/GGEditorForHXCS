@@ -10,23 +10,27 @@ import {Card} from "@alifd/next";
 
 interface DetailFormProps {
   form?: any;
+  dataObj?:any,
+  setFlowData?:Function
 }
 
 class FlowDetailPanel extends React.Component<DetailFormProps> {
 
   render() {
+   
+    
     return <DetailPanel className={styles.detailPanel}>
       {/* 选中的节点 */}
       <NodePanel>
         <DetailForm type="node" ref={(nodeRef:any) => {
           console.log('pppddd_nodeRef', nodeRef)
-        }} />
+        }} dataObj={this.props.dataObj}  setFlowData={this.props.setFlowData}/>
       </NodePanel>
       {/* //选中的线 */}
       <EdgePanel>
         <DetailForm type="edge" ref={(edgeRef:any) => {
           console.log('pppddd_edgeRef', edgeRef)
-        }} />
+        }} dataObj={this.props.dataObj}  setFlowData={this.props.setFlowData}/>
       </EdgePanel>
       <CanvasPanel>
         <Card free>
